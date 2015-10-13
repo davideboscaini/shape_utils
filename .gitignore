@@ -1,0 +1,4 @@
+# git ls-files --others --exclude-from=.git/info/exclude
+*.DS_STORE
+*.asv
+*.mat
