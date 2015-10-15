@@ -1,14 +1,31 @@
-function shape_sub = compute_subsampling(shape,n,params)
+function shape_out = compute_subsampling(shape_in,n,params)
 %
-% shape_sub = compute_subsampling(shape,n,params)
-%    computes the subsampling ... 
+% shape_out = compute_subsampling(shape_in,n,params)
+%    subsample the input shape to the given amount of vertices
 %
 % inputs:
-%    shape,
-%    n,
-%    params,
+%    shape_in, original shape
+%              struct containing the following fields: 
+%                 X, Y, Z, shape coordinates (arrays of size |vertices| x 1)
+%                 TRIV, shape connectivity (matrix of size |vertices| x 3)
+%    n, target number of vertices
+%    params, struct containing the following fields:
+%               verbose, boolean
+%                  if 1 (default), display info
+%                  if 0, otherwise
+%               placement, scalar value among 0, 1, 2, 3:
+%                  if 0 (default), force the subsampling to choose vertices only among the original vertices
+%                  if 1, force the subsampling to choose vertices among the original vertices and edge midpoints
+%                  if 2, force the subsampling to choose vertices along the original edge
+%                  if 3, optimal vertices positioning
+%               penalty, 
+%                  if 1 (default), add penalty for bad meshes
+%                  if 0, otherwise
 % output:
-%    shape_sub,
+%    shape_out, subsampled shape
+%               struct containing the following fields:
+%                  X, Y, Z, shape coordinates (arrays of size |vertices| x 1)
+%                  TRIV, shape connectivity (matrix of size |vertices| x 3)
 %
 
 if nargin < 3
@@ -17,5 +34,11 @@ if nargin < 3
     params.penalty   = 1;
 end    
 
-params.vertices  = n;
-[shape_sub.TRIV,shape_sub.X,shape_sub.Y,shape_sub.Z] = remesh(shape,params);
+params.vertices = n;
+[TRIV,X,Y,Z]    = remesh(shape_in,params);
+
+shape_out      = struct;
+shape_out.TRIV = TRIV;
+shape_out.X    = X;
+shape_out.Y    = Y;
+shape_out.Z    = Z;
