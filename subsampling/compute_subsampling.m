@@ -18,7 +18,7 @@ function shape_out = compute_subsampling(shape_in,n,params)
 %                  if 1, force the subsampling to choose vertices among the original vertices and edge midpoints
 %                  if 2, force the subsampling to choose vertices along the original edge
 %                  if 3, optimal vertices positioning
-%               penalty, 
+%               penalty, boolean
 %                  if 1 (default), add penalty for bad meshes
 %                  if 0, otherwise
 % output:
