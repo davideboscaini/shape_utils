@@ -48,10 +48,10 @@ U2 = U2./repmat(sqrt(sum(U2.^2,2)),[1 3]);
 
 % Construct 2x2 matrix D
 
-Cminmean = (1/3)*(Cmin(faces(:,1))+Cmin(faces(:,2))+Cmin(faces(:,3)));
-Cmaxmean = (1/3)*(Cmax(faces(:,1))+Cmax(faces(:,2))+Cmax(faces(:,3)));
+%Cminmean = (1/3)*(Cmin(faces(:,1))+Cmin(faces(:,2))+Cmin(faces(:,3)));
+%Cmaxmean = (1/3)*(Cmax(faces(:,1))+Cmax(faces(:,2))+Cmax(faces(:,3)));
 D = zeros(size(faces,1),2);
-D(:,1) = (1./(1+repmat(alpha,size(Cminmean))));
+D(:,1) = (1./(1+alpha));
 D(:,2) = 1;
 
 end
