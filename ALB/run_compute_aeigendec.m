@@ -21,13 +21,9 @@ for idx_angle = 1:length(names_angles)
     % loop over the shape instances
     parfor idx_shape = 1:length(names_shapes)
         
-        % re-assigning structs variables to avoid parfor errors 
-        paths_ = struct;
-        paths_.input = paths.input;
-        paths_.output = paths.output;
-        params_ = struct;
-        params_.k = params.k;
-        params_.shift = params.shift;
+        % re-assigning structs variables to avoid parfor errors
+        paths_ = paths;
+        params_ = params;
         
         % current shape
         name_shape = names_shapes{idx_shape}(1:end-4);
@@ -49,7 +45,7 @@ for idx_angle = 1:length(names_angles)
         
         % compute the eigendecomposition
         [Phi,Lambda] = eigs(W,A,params_.k,params_.shift);
-
+        
         % reorder the eigenvectors according to the eigenvalues
         Lambda = diag(abs(Lambda));
         [Lambda,idxs] = sort(Lambda);
