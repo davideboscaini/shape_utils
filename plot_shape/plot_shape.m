@@ -2,42 +2,64 @@ function plot_shape(shape,varargin)
 %
 % plot_shape(shape,func,params)
 %    plots the input shape
+%
 % input:
-%    shape, shape in input
-%    func, function defined on the shape
-%    params,
-%       flag_newfig,
-%       flag_shading,
-%       view_angle,
-%       flag_isolines,
-%       n_isolines,
-%       n_rows,
-%       flag_antialiasing,    
+%    shape, input shape
+%    func, scalar function/functions on the shape
+%    params, struct containing the following fields
+%       flag_newfig, if 1 open a new figure
+%       flag_shading, if 1 turn on the shading
+%       view_angle, specify the viewpoint as [azimuth,elevation]
+%       flag_isolines, if 1 shows the isolines of the input function on the shape
+%       n_isolines, specify how many isolines to plot
+%       n_rows, in case of more than one function in input, specify the number of rows for the subplot
+%       flag_antialiasing, if 1 the antialiasing is considered for the rendering 
 %
 
 if nargin == 1
     func = [];
     params.flag_newfig = 0;
     params.flag_shading = 1;
-	params.view_angle = [0,0];
-	params.flag_isolines = 0;
+    params.view_angle = [0,0];
+    params.flag_isolines = 0;
     params.n_isolines = 0;
     params.n_rows = 1;
-	params.flag_antialiasing = 0; 
+    params.flag_antialiasing = 0;
 elseif nargin == 2
     func = varargin{1};
     params.flag_newfig = 0;
     params.flag_shading = 1;
-	params.view_angle = [0,0];
-	params.flag_isolines = 0;
+    params.view_angle = [0,0];
+    params.flag_isolines = 0;
     params.n_isolines = 0;
     params.n_rows = 1;
-	params.flag_antialiasing = 0;  
+    params.flag_antialiasing = 0;
 elseif nargin == 3
     func = varargin{1};
     params = varargin{2};
+    if ~isfield(params,'flag_newfig')
+        params.flag_newfig = 0;
+    end
+    if ~isfield(params,'flag_shading')
+        params.flag_shading = 1;
+    end
+    if ~isfield(params,'view_angle')
+        params.view_angle = [0,0];
+    end
+    if ~isfield(params,'flag_isolines')
+        params.flag_isolines = 0;
+    end
+    if ~isfield(params,'n_isolines')
+        params.n_isolines = 0;
+    end
+    if ~isfield(params,'n_rows')
+        params.n_rows = 1;
+    end
+    if ~isfield(params,'flag_antialiasing')
+        params.flag_antialiasing = 0;
+    end
 else
-    error('[e] too many input arguments.');
+    error('[e] too many input arguments');
 end
 
 if params.flag_newfig
@@ -56,13 +78,13 @@ if isempty(func)
         lighting phong;
         camlight;
     end
-    set(gcf,'color',[1,1,1]);
+    set(gcf,'color','white');
     set(gca,'visible','off');
     freezeColors;
     
 else
     
-    if size(func,2)>size(func,1)
+    if size(func,2) > size(func,1)
         func = func';
     end
     
@@ -82,7 +104,7 @@ else
             trisurf(shape.TRIV,shape.X,shape.Y,shape.Z,func);
         end
         % caxis( [-max(abs(err)), max(abs(err))] );
-        % colormap(bluewhitered(256));
+        % colormap(redblue(256));
         % colormap(b2r(-max(abs(err)),max(abs(err))));
         % colorbar;
         axis image;
@@ -92,7 +114,7 @@ else
             lighting phong;
             camlight;
         end
-        set(gcf,'color',[1,1,1]);
+        set(gcf,'color','white');
         set(gca,'visible','off');
         
     else % size(func,2)>1
@@ -125,7 +147,7 @@ else
             end
             set(gcf, 'Color', [1,1,1]);
             set(gca, 'visible', 'off');
-
+            
         end
         
     end
