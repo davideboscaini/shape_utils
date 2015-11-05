@@ -5,12 +5,14 @@ function desc = compute_wks(Phi,Lambda,n_desc)
 %    "Aubry et al., The wave kernel signature: A quantum mechanical approach to shape analysis, Proc. ICCV, pp. 1626-1633, 2011"
 %
 % inputs:
-%    Phi,
-%    Lambda,
-%    n_desc,
+%    Phi, Laplace-Beltrami eigenvectors 
+%         matrix of size n x k, where n is the number of shape vertices and k is the eigenvectors number
+%    Lambda, Laplace-Beltrami eigenvalues
+%            vector of size k
+%    n_desc, number of wave kernel signature dimensions
 %       
 % output:
-%    desc,
+%    desc, wave kernel signature (WKS) descriptor
 %
 
 % % official implementation available at "http://www.di.ens.fr/~aubry/code/compute_wks.m"
