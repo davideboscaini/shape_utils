@@ -7,7 +7,6 @@ n = size(vertices,1);
 m = size(faces,1);
 
 % Reorient mesh faces if they are inconsistent
-
 adjacency_matrix = sparse([faces(:,1); faces(:,2); faces(:,3)], ...
     [faces(:,2); faces(:,3); faces(:,1)], ...
     ones(3 * m, 1), ...
@@ -22,7 +21,6 @@ clear adjacency_matrix;
 [U1, U2, D] = avg_diffusion_tensor(vertices,faces,params.alpha,params.curv_smooth,angle);
 
 % Construct the (anisotropic) stiffness matrix
-
 W = sparse(n,n);
 
 angles = zeros(size(faces));
@@ -59,8 +57,8 @@ for i=1:3
 end
 
 % Construct the mass matrix
-
-A = sparse(1:n, 1:n, calc_voronoi(vertices, faces));
+A = compute_1ring_barycentric_area(shape);
+% A = sparse(1:n, 1:n, calc_voronoi(vertices, faces));
 % A = calcVoronoiRegsCircCent (faces,vertices); % modified it in order to have compatible results with calc_LB
 
 end
