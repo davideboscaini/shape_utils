@@ -1,4 +1,4 @@
-function A = compute_area(vertices,faces)
+function A = compute_surface_area(vertices,faces)
 
 A = 0;
 for i = 1:length(faces)
