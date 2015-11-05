@@ -1,4 +1,4 @@
-function [W,A] = calc_ALB(shape,angle,params)
+function [W,A] = compute_albo(shape,angle,params)
 
 vertices = [shape.X,shape.Y,shape.Z];
 faces = shape.TRIV;
@@ -58,7 +58,9 @@ end
 
 % Construct the mass matrix
 A = compute_1ring_barycentric_area(shape);
+% othe possible choices:
 % A = sparse(1:n, 1:n, calc_voronoi(vertices, faces));
 % A = calcVoronoiRegsCircCent (faces,vertices); % modified it in order to have compatible results with calc_LB
+% be aware that the last one can return complex values
 
 end

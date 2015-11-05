@@ -1,32 +1,30 @@
-function run_compute_eigendec(paths,params)
+function run_compute_aeigendec(paths,params)
 
 % angle instances
 tmp = dir(fullfile(paths.input,sprintf('alpha=%03.0f',params.alpha)));
 names_angles = {tmp.name}; clear tmp;
 names_angles = setdiff(names_angles,{'.','..'});
 
-% loop over the angles instances
+% loop over the angle instances
 for idx_angle = 1:length(names_angles)
     
     % current angle
     name_angle = names_angles{idx_angle};
     
-    % display infos
+    % display info
     fprintf('[i] processing angle %3.0f (%3.0d/%3.0d)...\n',str2num(name_angle(end-2:end)),idx_angle,length(names_angles));
     
-    % shapes instances
+    % shape instances
     tmp = dir(fullfile(paths.input,sprintf('alpha=%03.0f',params.alpha),name_angle,'*.mat'));
     names_shapes = sortn({tmp.name}); clear tmp;
     
-    % loop over the shapes instances
+    % loop over the shape instances
     parfor idx_shape = 1:length(names_shapes)
         
-        %
+        % re-assigning structs variables to avoid parfor errors 
         paths_ = struct;
         paths_.input = paths.input;
         paths_.output = paths.output;
-        
-        % 
         params_ = struct;
         params_.k = params.k;
         params_.shift = params.shift;
@@ -40,7 +38,7 @@ for idx_angle = 1:length(names_angles)
             continue;
         end
         
-        % display infos
+        % display info
         fprintf('[i] \tprocessing shape ''%s'' (%3.0d/%3.0d)... ',name_shape,idx_shape,length(names_shapes));
         time_start = tic;
         
@@ -52,7 +50,7 @@ for idx_angle = 1:length(names_angles)
         % compute the eigendecomposition
         [Phi,Lambda] = eigs(W,A,params_.k,params_.shift);
 
-        % reorder the eigenvectors according to the aigenvalues
+        % reorder the eigenvectors according to the eigenvalues
         Lambda = diag(abs(Lambda));
         [Lambda,idxs] = sort(Lambda);
         Phi = Phi(:,idxs);
