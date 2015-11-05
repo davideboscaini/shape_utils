@@ -1,15 +1,4 @@
-function run_compute_hks(paths,params)
-%
-% run_compute_hks(paths,params)
-%    computes the heat kernel signatures for the given shapes
-%
-% inputs:
-%    paths, struct containing the following fields
-%       input, path to the folder containing the shapes
-%       output, path to the folder where to save the descriptors computed
-%    params, struct containing the following field
-%       tvals, time values at which compute the heat kernel signatures
-%
+function run_compute_lbo(paths)
 
 % shape instances
 tmp = dir(fullfile(paths.input,'*.mat'));
@@ -35,19 +24,18 @@ parfor idx_shape = 1:length(names)
     fprintf('[i] processing shape ''%s'' (%3.0d/%3.0d)... ',name,idx_shape,length(names));
     time_start = tic;
     
-    % load current eigendecomposition
+    % load current shape
     tmp = load(fullfile(paths_.input,[name,'.mat']));
-    Phi = tmp.Phi;
-    Lambda = tmp.Lambda;
+    shape = tmp.shape;
     
-    % compute the heat kernel signature (HKS)
-    desc = compute_hks(Phi,Lambda,params_.tvals);
+    % compute the Laplace-Beltrami operator
+    [W,A] = compute_lbo(shape);
     
     % saving
     if ~exist(paths_.output,'dir')
         mkdir(paths_.output);
     end
-    par_save(fullfile(paths_.output,[name,'.mat']),desc);
+    par_save(fullfile(paths_.output,[name,'.mat']),W,A);
     
     % display info
     fprintf('%2.0fs\n',toc(time_start));
@@ -56,6 +44,6 @@ end
 
 end
 
-function par_save(path,desc)
-save(path,'desc','-v7.3')
+function par_save(path,W,A)
+save(path,'W','A','-v7.3');
 end

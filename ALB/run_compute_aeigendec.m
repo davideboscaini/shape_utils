@@ -46,7 +46,7 @@ for idx_angle = 1:length(names_angles)
         % compute the eigendecomposition
         [Phi,Lambda] = eigs(W,A,params_.k,params_.shift);
         
-        % reorder the eigenvectors according to the eigenvalues
+        % re-order the eigenvectors according to the eigenvalues
         Lambda = diag(abs(Lambda));
         [Lambda,idxs] = sort(Lambda);
         Phi = Phi(:,idxs);
