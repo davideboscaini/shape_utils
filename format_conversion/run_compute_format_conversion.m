@@ -1,34 +1,45 @@
-function run_compute_format_conversion(path_folder,format_in,format_out)
+function run_compute_format_conversion(paths,params)
 %
-% run_convert_format(name,path_folder,format_in,format_out)
-%    converts all the 'format_in' files present in 'path_folder' to 'format_out' ones
+% run_convert_format(paths,params)
+%    converts the given shapes to the desired mesh format
 %
 % inputs:
-%    path_folder, path of the folder containing the files to convert
-%    format_in,   extension of the files to convert
-%    format_out,  desired extension of the output files
+%    paths, struct containing the following fields
+%       input, path to the folder containing the shapes
+%       output, path to the folder where to save the descriptors computed
+%    params, struct containing the following fields
+%       format_in, extension of the file to convert
+%       format_out, desired extension of the output file
 %
 
-% dataset instances
-names_ = dir(fullfile(path_folder,['*.',format_in]));
-names  = sortn({names_.name}); clear names_;
+% shape instances
+names_ = dir(fullfile(paths.input,['*.',params.format_in]));
+names = sortn({names_.name}); clear names_;
 
-% loop over the dataset instances
-for idx_shape = 1:length(names)
+% loop over the shape instances
+parfor idx_shape = 1:length(names)
+    
+    % re-assigning structs variables to avoid parfor errors
+    paths_ = paths;
+    params_ = params;
     
     % current shape
     name = names{idx_shape}(1:end-4);
     
-    % display infos
+    % avoid unnecessary computations
+    if exist(fullfile(paths_.output,[name,'.',params.format_out]),'file')
+        fprintf('[i] shape ''%s'' already processed, skipping\n',name);
+        continue;
+    end
+    
+    % display info
     fprintf('[i] processing shape ''%s'' (%3.0d/%3.0d)... ',name,idx_shape,length(names));
     time_start = tic;
     
     % convert format
-    convert_format(name,path_folder,format_in,format_out);
+    compute_format_conversion(name,paths,params)
     
     % display info
     fprintf('%2.0fs\n',toc(time_start));
     
 end
-
-
