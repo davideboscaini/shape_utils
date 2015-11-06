@@ -1,13 +1,20 @@
-function run_compute_geods(paths)
+function run_rescale_shape(paths,params)
 %
-% run_compute_geods(paths)
-%    computes the geodesic distances for the given shapes
+% run_rescale_shape(paths,params)
+%    rescales the given shapes
 %
 % inputs:
 %    paths, struct containing the following fields
-%       input, path to the folder containing the shapes
-%       output, path to the folder where to save the geodesic distances computed
+%       input, path to the folder containing the input shapes
+%       output, path to the folder where to save the rescaled shapes
+%    params, struct containing the following fields
+%       flag_compute_scale_factor
 %
+
+if nargin < 2
+    params.flag_compute_scale_factor = 1;
+    params.avoid_geods = 0;
+end
 
 % shape instances
 tmp = dir(fullfile(paths.input,'*.mat'));
@@ -18,6 +25,7 @@ parfor idx_shape = 1:length(names)
     
     % re-assigning structs variables to avoid parfor errors
     paths_ = paths;
+    params_ = params;
     
     % current shape
     name = names{idx_shape}(1:end-4);
@@ -28,23 +36,27 @@ parfor idx_shape = 1:length(names)
         continue;
     end
     
-    % display infos
+    % display info
     fprintf('[i] processing shape ''%s'' (%3.0d/%3.0d)... ',name,idx_shape,length(names));
     time_start = tic;
     
-    % load shape
+    % load current shape
     tmp = load(fullfile(paths_.input,[name,'.mat']));
     shape = tmp.shape;
     
-    % compute geodesic distances
-    idxs = [1:length(shape.X)]';
-    geods = compute_geods(shape,idxs);
+    % compute scale factor
+    if params_.flag_compute_scale_factor
+        params_.scale_factor = compute_scale_factor_to_unit_diam(shape,params_);
+    end
+        
+    % rescale shape
+    shape = rescale_shape(shape,params_.scale_factor);
     
     % saving
     if ~exist(paths_.output,'dir')
         mkdir(paths_.output);
     end
-    par_save(fullfile(paths_.output,[name,'.mat']),geods);
+    par_save(fullfile(paths_.output,[name,'.mat']),shape);
     
     % display info
     fprintf('%2.0fs\n',toc(time_start));
@@ -53,6 +65,6 @@ end
 
 end
 
-function par_save(path,geods)
-save(path,'geods','-v7.3');
+function par_save(path,shape)
+save(path,'shape','-v7.3')
 end

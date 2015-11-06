@@ -6,7 +6,7 @@ function run_compute_format_conversion(paths,params)
 % inputs:
 %    paths, struct containing the following fields
 %       input, path to the folder containing the shapes
-%       output, path to the folder where to save the descriptors computed
+%       output, path to the folder where to save the converted files
 %    params, struct containing the following fields
 %       format_in, extension of the file to convert
 %       format_out, desired extension of the output file

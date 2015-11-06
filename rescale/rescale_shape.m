@@ -4,11 +4,13 @@ function shape = rescale_shape(shape,scale_factor)
 %    rescale the input shape by the provided scale factor   
 % 
 % inputs:
-%    shape, struct containing the fields 'X', 'Y', 'Z' (coordinates) 
-%           and 'TRIV' (connectivity)
+%    shape, struct containing the following fields 
+%           X, Y, Z, shape coordinates
+%           TRIV, triangular mesh connectivity
 %    scale_factor, scalar value
+%
 % output:
-%    shape, re-scaled shape
+%    shape, rescaled shape
 %
 
 vertices = [shape.X,shape.Y,shape.Z];
