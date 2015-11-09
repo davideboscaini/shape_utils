@@ -2,12 +2,16 @@ function shape_out = compute_translation(shape_in,params)
 %
 % shape_out = compute_translation(shape_in,displacement)
 %    translates the input shape according to the given parameters
+%
 % inputs:
-%    shape_in,
-%    displacement,
+%    shape_in, struct containing the following fields 
+%       X, Y, Z, shape coordinates 
+%       TRIV, triangular mesh connectivity
+%    params [optional], struct containing the following field
+%       displacement, shift along each coordinate dimensions
 %
 % output:
-%    shape_out,
+%    shape_out
 %
 
 if nargin < 2
