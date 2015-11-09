@@ -4,7 +4,8 @@ function [err,prc] = saturate(err,prc)
     end
     mask = (err > prc);
     err(mask) = prc; 
-    % err = log(1+err);
-    err = err./max(err);
-    err = ((err - min(err)) / (max(err)-min(err))) * (0.995 - 0.005) + 0.005;
 end
+
+% err = log(1+err);
+% err = err./max(err);
+% err = ((err - min(err)) / (max(err)-min(err))) * (0.995 - 0.005) + 0.005;
