@@ -1,24 +1,23 @@
-function run_compute_subsampling(path_input,n,path_saving,params)
+function run_compute_subsampling(paths,params)
 %
-% run_compute_subsampling(path_input,n,path_saving,params)
-%    computes ...
+% run_compute_subsampling(paths,params)
+%    subsamples ...
 %
 % inputs:
-%    path_folder, path of the folder containing the files to convert
-%    n,
+%    paths, 
 %    params,
 %
 
 if nargin < 4
-    params.vertices  = n;
-    params.verbose   = 1;
+    params.vertices = 1000;
+    params.verbose = 1;
     params.placement = 0;
-    params.penalty   = 1;
+    params.penalty = 1;
     params.preserve_triangulation = 0;
 end
 
 % dataset instances
-tmp   = dir(fullfile(path_input,'*.mat'));
+tmp = dir(fullfile(paths.input,'*.mat'));
 names = sortn({tmp.name}); clear tmp;
 
 if params.preserve_triangulation
@@ -28,7 +27,7 @@ if params.preserve_triangulation
     for idx_shape = 1:length(names)
         name = names{idx_shape}(1:end-4);
         % load current shape
-        tmp   = load(fullfile(path_input,[name,'.mat']));
+        tmp   = load(fullfile(paths.input,[name,'.mat']));
         shape = tmp.shape;
         n_verts(idx_shape) = length(shape.X);
     end
@@ -36,50 +35,57 @@ if params.preserve_triangulation
     
     %
     name_shape_min_verts = names{idx_shape_min_verts}(1:end-4);
-    tmp = load(fullfile(path_input,[name_shape_min_verts,'.mat']));
+    tmp = load(fullfile(paths.input,[name_shape_min_verts,'.mat']));
     shape = tmp.shape;
-    shape_sub = compute_subsampling(shape,n,params);
+    shape_sub = compute_subsampling(shape,params);
     errs = L2_distance([shape_sub.X,shape_sub.Y,shape_sub.Z]',[shape.X,shape.Y,shape.Z]');
     [vals,idxs] = min(errs,[],2);
-    %idxs = idxs(vals==0);
+    % idxs = idxs(vals==0);
     TRIV = shape_sub.TRIV;
     
 end
 
-% loop over the dataset instances
-for idx_shape = 1:length(names)
+% loop over the shape instances
+parfor idx_shape = 1:length(names)
+    
+    % re-assigning structs variables to avoid parfor errors
+    paths_ = paths;
+    params_ = params;
     
     % current shape
     name = names{idx_shape}(1:end-4);
     
-    if exist(fullfile(path_saving,[name,'.mat']), 'file')
-        fprintf('[i] shape %s already processed, skipping\n', name)
-        continue
+    % avoid unnecessary computations
+    if exist(fullfile(paths_.output,[name,'.mat']),'file')
+        fprintf('[i] shape ''%s'' already processed, skipping\n',name);
+        continue;
     end
     
-    % display infos
+    % display info
     fprintf('[i] processing shape ''%s'' (%3.0d/%3.0d)... ',name,idx_shape,length(names));
     time_start = tic;
     
     % load current shape
-    tmp   = load(fullfile(path_input,[name,'.mat']));
+    tmp = load(fullfile(paths_.input,[name,'.mat']));
     shape = tmp.shape;
     
-    if params.preserve_triangulation
-        shape_sub.X    = shape.X(idxs);
-        shape_sub.Y    = shape.Y(idxs);
-        shape_sub.Z    = shape.Z(idxs);
+    % compute the subsampling
+    if params_.preserve_triangulation
+        shape_sub = struct;
+        shape_sub.X = shape.X(idxs);
+        shape_sub.Y = shape.Y(idxs);
+        shape_sub.Z = shape.Z(idxs);
         shape_sub.TRIV = TRIV;
         shape = shape_sub;
     else
-        shape = compute_subsampling(shape,n,params);
+        shape = compute_subsampling(shape_,params_);
     end
     
     % saving
-    if ~exist(path_saving,'dir')
-        mkdir(path_saving);
+    if ~exist(paths_.output,'dir')
+        mkdir(paths_.output);
     end
-    par_save(fullfile(path_saving,[name,'.mat']),shape);
+    par_save(fullfile(paths_.output,[name,'.mat']),shape);
     
     % display info
     fprintf('%2.0fs\n',toc(time_start));
