@@ -29,7 +29,7 @@ for idx_angle = 1:length(names_angles)
         name_shape = names_shapes{idx_shape}(1:end-4);
         
         % avoid unnecessary computations
-        if exist(fullfile(paths_.output,sprintf('alpha=%03.0f',params.alpha),sprintf('angle=%03.0f',str2num(name_angle(end-2:end))),[name_shape,'.mat']),'file')
+        if exist(fullfile(paths_.output,sprintf('alpha=%03.0f',params_.alpha),sprintf('angle=%03.0f',str2num(name_angle(end-2:end))),[name_shape,'.mat']),'file')
             fprintf('[i] shape %s already processed, skipping\n',name_shape);
             continue;
         end
@@ -39,7 +39,7 @@ for idx_angle = 1:length(names_angles)
         time_start = tic;
         
         % load current lbo
-        tmp = load(fullfile(paths_.input,sprintf('alpha=%03.0f',params.alpha),sprintf('angle=%03.0f',str2num(name_angle(end-2:end))),[name_shape,'.mat']));
+        tmp = load(fullfile(paths_.input,sprintf('alpha=%03.0f',params_.alpha),sprintf('angle=%03.0f',str2num(name_angle(end-2:end))),[name_shape,'.mat']));
         W = tmp.W;
         A = tmp.A;
         
@@ -52,7 +52,7 @@ for idx_angle = 1:length(names_angles)
         Phi = Phi(:,idxs);
         
         % saving
-        paths_.output_ = fullfile(paths_.output,sprintf('alpha=%03.0f',params.alpha),sprintf('angle=%03.0f',str2num(name_angle(end-2:end))));
+        paths_.output_ = fullfile(paths_.output,sprintf('alpha=%03.0f',params_.alpha),sprintf('angle=%03.0f',str2num(name_angle(end-2:end))));
         if ~exist(paths_.output_,'dir')
             mkdir(paths_.output_);
         end
