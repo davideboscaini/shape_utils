@@ -1,4 +1,4 @@
-function run_compute_rototranslation(path_input,path_output,params)
+function run_compute_rototranslation(paths,params)
 %
 % run_compute_rototranslation(??)
 %    computes ...
@@ -24,48 +24,51 @@ else
 end
 
 % dataset instances
-tmp   = dir(fullfile(path_input,'*.mat'));
+tmp = dir(fullfile(paths.input,'*.mat'));
 names = sortn({tmp.name}); clear tmp;
 
 % loop over the dataset instances
-n_shapes = length(names);
-parfor idx_shape = 1:n_shapes
+parfor idx_shape = 1:length(names)
+    
+    % re-assigning structs variables to avoid parfor errors
+    paths_ = paths;
+    params_ = params;
     
     % current shape
     name = names{idx_shape}(1:end-4);
     
     %
-    if exist(fullfile(path_output,[name,'.mat']),'file')
+    if exist(fullfile(paths_.output,[name,'.mat']),'file')
         fprintf('[i] shape ''%s'' already processed, skipping\n',name);
         continue;
     end
     
     % display infos
-    fprintf('[i] processing shape ''%s'' (%3.0d/%3.0d)... ',name,idx_shape,n_shapes);
+    fprintf('[i] processing shape ''%s'' (%3.0d/%3.0d)... ',name,idx_shape,length(names));
     time_start = tic;
     
     % load current shape
-    tmp   = load(fullfile(path_input,[name,'.mat']));
+    tmp   = load(fullfile(paths_.input,[name,'.mat']));
     shape = tmp.shape;
     
     %
     if flag_params_roto
-        shape = compute_rotation(shape,params);
+        shape = compute_rotation(shape,params_);
     else
-        shape = compute_rotation(shape,params);
+        shape = compute_rotation(shape,params_);
     end
     
     if flag_params_trasl
-        shape = compute_translation(shape,params);
+        shape = compute_translation(shape,params_);
     else
         shape = compute_translation(shape);
     end
     
     % saving
-    if ~exist(path_output,'dir')
-        mkdir(path_output);
+    if ~exist(paths_.output,'dir')
+        mkdir(paths_.output);
     end
-    par_save(fullfile(path_output,[name,'.mat']),shape);
+    par_save(fullfile(paths_.output,[name,'.mat']),shape);
     
     % display info
     fprintf('%2.0fs\n',toc(time_start));

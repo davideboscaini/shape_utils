@@ -35,7 +35,7 @@ else
     
     params.thresh = 1e+12;
     params.n_dists = params.q;
-    geods = compute_geodesic_dists(shape,idxs,params);
+    geods = compute_geods(shape,idxs,params);
     scale_factor = 1./max(geods(:));
     
 end

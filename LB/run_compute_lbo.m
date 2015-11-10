@@ -9,7 +9,6 @@ parfor idx_shape = 1:length(names)
     
     % re-assigning structs variables to avoid parfor errors
     paths_ = paths;
-    params_ = params;
     
     % current shape
     name = names{idx_shape}(1:end-4);
