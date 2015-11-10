@@ -12,7 +12,7 @@ function run_compute_wks(paths,params)
 %
 
 % shape instances
-tmp = dir(fullfile(path_input,'*.mat'));
+tmp = dir(fullfile(paths.input,'*.mat'));
 names = sortn({tmp.name}); clear tmp;
 
 % loop over the shape instances
@@ -32,7 +32,7 @@ parfor idx_shape = 1:length(names)
     end
     
     % display info
-    fprintf('[i] processing shape ''%s'' (%3.0d/%3.0d)... ',name,idx_shape,n_shapes);
+    fprintf('[i] processing shape ''%s'' (%3.0d/%3.0d)... ',name,idx_shape,length(names));
     time_start = tic;
     
     % load current eigendecomposition
