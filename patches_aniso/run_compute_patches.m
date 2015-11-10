@@ -36,10 +36,14 @@ parfor idx_shape = 1:length(names)
     M_ = [];
     
     % saving
-    if ~exist(paths_.output,'dir')
-        mkdir(paths_.output);
+    if ~exist(paths_.output_P,'dir')
+        mkdir(paths_.output_P);
     end
-    par_save(fullfile(paths_.output,[name,'.mat']),M);
+    par_save_P(fullfile(paths_.output_P,[name,'.mat']),P);
+    if ~exist(paths_.output_M,'dir')
+        mkdir(paths_.output_M);
+    end
+    par_save_M(fullfile(paths_.output_M,[name,'.mat']),M);
     
     % display infos
     fprintf('%3.0fs\n',toc(time_start));
@@ -48,7 +52,11 @@ end
 
 end
 
-function par_save(path,M)
+function par_save_P(path,P)
+save(path,'P','-v7.3');
+end
+
+function par_save_M(path,M)
 save(path,'M','-v7.3');
 end
 

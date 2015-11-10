@@ -1,4 +1,4 @@
-function run_compute_albos(paths,angles,params)
+function run_compute_albo(paths,params)
 
 % shape instances
 tmp = dir(fullfile(paths.input,'*.mat'));
@@ -8,13 +8,8 @@ names = sortn({tmp.name}); clear tmp;
 parfor idx_shape = 1:length(names)
     
     % re-assigning structs variables to avoid parfor errors 
-    params_ = struct;
-    params_.scale_factor = params.scale_factor;
-    params_.alpha = params.alpha;
-    params_.curv_smooth = params.curv_smooth;
-    paths_ = struct;
-    paths_.input = paths.input;
-    paths_.output = paths.output;
+    paths_ = paths;
+    params_ = params;
     
     % current shape
     name = names{idx_shape}(1:end-4);
@@ -36,10 +31,10 @@ parfor idx_shape = 1:length(names)
     % TO BE REMOVED IN A FUTURE VERSION
     % shape = rescale_shape(shape,params_.scale_factor);
     
-    for idx_angle = 1:length(angles)
+    for idx_angle = 1:length(params_.angles)
         
         % current angle
-        angle = angles(idx_angle);
+        angle = params_.angles(idx_angle);
         
         % compute the anisotropic Laplace-Beltrami operator
         [W,A] = calc_ALB(shape,angle,params_);

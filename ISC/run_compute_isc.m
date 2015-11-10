@@ -1,10 +1,10 @@
 function run_compute_isc(paths,params)
 
-angles = params.angles;
-tvals = params.tvals;
+n_angles = params.n_angles;
+n_tvals = params.n_tvals;
 
 % shape instances
-names_ = dir(fullfile(paths.shape,'*.mat'));
+names_ = dir(fullfile(paths.input,'*.mat'));
 names = sortn({names_.name}); clear names_;
 
 % loop over the shape instances
@@ -18,7 +18,7 @@ for idx_shape = 1:length(names)
     time_start = tic;
     
     % load input desc
-    tmp = load(fullfile(paths.descs_in,[name,'.mat']));
+    tmp = load(fullfile(paths.input,[name,'.mat']));
     desc_in = tmp.desc; clear tmp;
     
     % load (spectral) patches
@@ -26,14 +26,14 @@ for idx_shape = 1:length(names)
     P = tmp.P; clear tmp;
     
     % compute output desc
-    desc_out = cell(length(angles),length(tvals));
-    for idx_angle = 1:length(angles)
-        for idx_tval = 1:length(tvals)
+    desc_out = cell(n_angles,n_tvals);
+    for idx_angle = 1:n_angles
+        for idx_tval = 1:n_tvals
             desc_out{idx_angle,idx_tval} = P{idx_angle,idx_tval} * desc_in;
         end
     end
     
-    desc = reshape(cell2mat(desc_out),size(desc_in,1),size(desc_in,2)*length(tvals)*length(angles));
+    desc = reshape(cell2mat(desc_out),size(desc_in,1),size(desc_in,2)*n_tvals*n_angles);
     % desc = bsxfun(@rdivide,desc,sqrt(sum(desc.^2,2)));
     
     % saving
