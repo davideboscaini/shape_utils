@@ -1,7 +1,15 @@
 function extract_patch_operator(srcpath, dstpath, patch_params)
 
+if ~exist(dstpath, 'dir')
+    mkdir(dstpath);
+end
+
 fnames = dir(fullfile(srcpath, '*.mat'));
-for i = 1 : length(fnames)
+parfor i = 1 : length(fnames)
+    if exist(fullfile(dstpath, fnames(i).name), 'file')
+        fprintf('%s already processed, skipping\n', fnames(i).name)
+        continue
+    end
     fprintf('Processing %s\n', fnames(i).name)
     tmp = load(fullfile(srcpath, fnames(i).name));
     shape = tmp.shape;
@@ -12,7 +20,7 @@ for i = 1 : length(fnames)
     % this allows a more efficient moltiplication and handling in theano
     M = sparse(cat(1, M{:}));
     
-    parsave(fullfile(dstpath, fnames(i).name), 'M', '-v7.3');
+    parsave(fullfile(dstpath, fnames(i).name), M);
 end
 end
 

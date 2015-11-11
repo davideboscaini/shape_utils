@@ -5,7 +5,7 @@ names_ = dir(fullfile(paths.input,'*.mat'));
 names = sortn({names_.name}); clear names_;
 
 % loop over the shape instances
-parfor idx_shape = 1:length(names)
+for idx_shape = 1:length(names)
     
     % re-assigning structs variables to avoid parfor errors
     paths_ = paths;
@@ -15,7 +15,7 @@ parfor idx_shape = 1:length(names)
     name = names{idx_shape}(1:end-4);
     
     % avoid unnecessary computations
-    if exist(fullfile(paths_.output,[name,'.mat']),'file')
+    if exist(fullfile(paths_.output_matlab,[name,'.mat']),'file') && exist(fullfile(paths_.output_python,[name,'.mat']),'file')
         fprintf('[i] shape ''%s'' already processed, skipping\n',name);
         continue;
     end
@@ -25,25 +25,26 @@ parfor idx_shape = 1:length(names)
     time_start = tic;
     
     % compute patch
-    P = compute_patches(name,params_.angles,params_.tvals,paths_,params_);
+    M = compute_patches(name,params_.angles,params_.tvals,paths_,params_);
+    
+%     % saving
+%     if ~exist(paths_.output_matlab,'dir')
+%         mkdir(paths_.output_matlab);
+%     end
+%     par_save(fullfile(paths_.output_matlab,[name,'.mat']),M);
     
     % convert the patch to Python compatible format
-    M_ = convert_patches_to_python_format(P);
+    M = convert_patches_to_python_format(M);
     
     % convert to sparse format to save memory
-    [r,c,v] = find(M_);
-    M = sparse(r,c,double(v),size(M_,1),size(M_,2));
-    M_ = [];
+    [r,c,v] = find(M);
+    M = sparse(r,c,double(v),size(M,1),size(M,2));
     
     % saving
-    if ~exist(paths_.output_P,'dir')
-        mkdir(paths_.output_P);
+    if ~exist(paths_.output_python,'dir')
+        mkdir(paths_.output_python);
     end
-    par_save_P(fullfile(paths_.output_P,[name,'.mat']),P);
-    if ~exist(paths_.output_M,'dir')
-        mkdir(paths_.output_M);
-    end
-    par_save_M(fullfile(paths_.output_M,[name,'.mat']),M);
+    par_save(fullfile(paths_.output_python,[name,'.mat']),M);
     
     % display infos
     fprintf('%3.0fs\n',toc(time_start));
@@ -52,11 +53,7 @@ end
 
 end
 
-function par_save_P(path,P)
-save(path,'P','-v7.3');
-end
-
-function par_save_M(path,M)
+function par_save(path,M)
 save(path,'M','-v7.3');
 end
 

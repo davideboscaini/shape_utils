@@ -21,20 +21,18 @@ for idx_shape = 1:length(names)
     tmp = load(fullfile(paths.input,[name,'.mat']));
     desc_in = tmp.desc; clear tmp;
     
+    %desc_in = ones(6890,1);
+    
     % load (spectral) patches
     tmp = load(fullfile(paths.patches,[name,'.mat']));
-    P = tmp.P; clear tmp;
+    M = tmp.M; clear tmp;
     
-    % compute output desc
-    desc_out = cell(n_angles,n_tvals);
-    for idx_angle = 1:n_angles
-        for idx_tval = 1:n_tvals
-            desc_out{idx_angle,idx_tval} = P{idx_angle,idx_tval} * desc_in;
-        end
-    end
-    
-    desc = reshape(cell2mat(desc_out),size(desc_in,1),size(desc_in,2)*n_tvals*n_angles);
-    % desc = bsxfun(@rdivide,desc,sqrt(sum(desc.^2,2)));
+    %
+    desc = M * desc_in;
+    desc = reshape(desc,size(desc_in,2),n_angles,n_tvals,size(desc_in,1));
+    desc = permute(desc,[4,1,3,2]);
+    desc = abs(fft(desc,[],4));
+    desc = reshape(desc,size(desc_in,1),size(desc_in,2)*n_tvals*n_angles);
     
     % saving
     if ~exist(paths.output,'dir')
@@ -53,7 +51,18 @@ function par_save(path,desc)
 save(path,'desc','-v7.3');
 end
 
-% obsolete:
+% obsolete
+% % compute output desc
+% desc_out = cell(n_angles,n_tvals);
+% for idx_angle = 1:n_angles
+%     for idx_tval = 1:n_tvals
+%         desc_out{idx_angle,idx_tval} = P{idx_angle,idx_tval} * desc_in;
+%     end
+% end
+% desc = reshape(cell2mat(desc_out),size(desc_in,1),size(desc_in,2)*n_tvals*n_angles);
+% desc = bsxfun(@rdivide,desc,sqrt(sum(desc.^2,2)));
+
+% (very) obsolete:
 % desc_out = zeros(size(desc_in,1),size(desc_in,2),length(tvals),length(angles));
 % for idx_tval = 1:length(tvals)
 %     for idx_angle = 1:length(angles)

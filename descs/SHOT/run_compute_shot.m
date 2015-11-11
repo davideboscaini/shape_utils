@@ -1,4 +1,4 @@
-function run_compute_shot(paths,params)
+function run_compute_shot(paths) %,params)
 %
 % run_compute_shot(paths,params)
 %    computes SHOT descriptors for the given shapes
@@ -14,11 +14,11 @@ function run_compute_shot(paths,params)
 %
 
 % are parameters given in input?
-if nargin < 2
+%if nargin < 2
     flag_params = 0;
-else
-    flag_params = 1;
-end
+%else
+%    flag_params = 1;
+%end
 
 % shape instances
 tmp = dir(fullfile(paths.input,'*.mat'));
@@ -29,7 +29,9 @@ parfor idx_shape = 1:length(names)
     
     % re-assigning structs variables to avoid parfor errors
     paths_ = paths;
-    params_ = params;
+    %if flag_params
+    %    params_ = params;
+    %end
     
     % current shape
     name = names{idx_shape}(1:end-4);
