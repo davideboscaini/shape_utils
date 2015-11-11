@@ -28,11 +28,33 @@ for idx_shape = 1:length(names)
     M = tmp.M; clear tmp;
     
     %
+%     desc = M * desc_in;
+%     desc = reshape(desc,size(desc_in,2),n_angles,n_tvals,size(desc_in,1));
+%     desc = permute(desc,[4,1,3,2]);
+    
+%     isc = M * desc_in;
+%     isc = permute(reshape(isc', size(desc_in,2), n_angles, n_tvals, size(desc_in,1)), [4,1,3,2]);
+%     isc = abs(fft(isc, [], 4));
+%     isc_all = zeros(size(desc_in,1), n_angles*n_tvals*size(desc_in,2));
+%     for j = 1 : N
+%         isc_all(j,:) = reshape(isc_(j,:,:,:),1,[]);
+%     end
+    
+    %
     desc = M * desc_in;
-    desc = reshape(desc,size(desc_in,2),n_angles,n_tvals,size(desc_in,1));
-    desc = permute(desc,[4,1,3,2]);
-    desc = abs(fft(desc,[],4));
-    desc = reshape(desc,size(desc_in,1),size(desc_in,2)*n_tvals*n_angles);
+    desc = permute(reshape(desc', size(desc_in,2), n_angles, n_tvals, size(desc_in,1)), [4,1,3,2]);
+    
+    %    
+    if params.flag_abs_fft
+        desc = abs(fft(desc,[],4));
+    end
+    
+    isc = zeros(size(desc_in,1), n_angles*n_tvals*size(desc_in,2));
+    for j = 1 : size(desc_in,1)
+        isc(j,:) = reshape(desc(j,:,:,:),1,[]);
+    end
+    desc = isc;
+    %desc = reshape(desc,size(desc_in,1),size(desc_in,2)*n_tvals*n_angles);
     
     % saving
     if ~exist(paths.output,'dir')

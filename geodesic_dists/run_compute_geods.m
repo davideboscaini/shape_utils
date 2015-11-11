@@ -1,4 +1,4 @@
-function run_compute_geods(paths)
+function run_compute_geods(paths,params)
 %
 % run_compute_geods(paths)
 %    computes the geodesic distances for the given shapes
@@ -18,14 +18,17 @@ parfor idx_shape = 1:length(names)
     
     % re-assigning structs variables to avoid parfor errors
     paths_ = paths;
+    params_ = params;
     
     % current shape
     name = names{idx_shape}(1:end-4);
     
-    % avoid unnecessary computations
-    if exist(fullfile(paths_.output,[name,'.mat']),'file')
-        fprintf('[i] shape ''%s'' already processed, skipping\n',name);
-        continue;
+    if ~params_.flag_recompute
+        % avoid unnecessary computations
+        if exist(fullfile(paths_.output,[name,'.mat']),'file')
+            fprintf('[i] shape ''%s'' already processed, skipping\n',name);
+            continue;
+        end
     end
     
     % display infos

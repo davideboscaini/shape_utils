@@ -8,7 +8,7 @@ hold on
 for r = 1:size(HIST,1)
     for t = 1:size(HIST,2)
         [X,Y] = drawpatch(th(t)+offset,th(t+1)+offset,rr(r),rr(r+1));
-        patch(X,Y,cc(r,t),'LineWidth',3);
+        patch(X,Y,cc(r,t),'LineWidth',1);
     end
 end
 if nargin==5

@@ -28,10 +28,12 @@ for idx_angle = 1:length(names_angles)
         % current shape
         name_shape = names_shapes{idx_shape}(1:end-4);
         
-        % avoid unnecessary computations
-        if exist(fullfile(paths_.output,sprintf('alpha=%03.0f',params_.alpha),sprintf('angle=%03.0f',str2num(name_angle(end-2:end))),[name_shape,'.mat']),'file')
-            fprintf('[i] shape %s already processed, skipping\n',name_shape);
-            continue;
+        if ~params_.flag_recompute
+            % avoid unnecessary computations
+            if exist(fullfile(paths_.output,sprintf('alpha=%03.0f',params_.alpha),sprintf('angle=%03.0f',str2num(name_angle(end-2:end))),[name_shape,'.mat']),'file')
+                fprintf('[i] shape %s already processed, skipping\n',name_shape);
+                continue;
+            end
         end
         
         % display info

@@ -1,4 +1,4 @@
-function run_compute_isc(paths,params)
+function run_compute_isc_old(paths,params)
 
 n_angles = params.n_angles;
 n_tvals = params.n_tvals;
@@ -23,13 +23,13 @@ for idx_shape = 1:length(names)
     
     % load (spectral) patches
     tmp = load(fullfile(paths.patches,[name,'.mat']));
-    P = tmp.P; clear tmp;
+    M = tmp.M; clear tmp;
     
     % compute output desc
     desc_out = cell(n_angles,n_tvals);
     for idx_angle = 1:n_angles
         for idx_tval = 1:n_tvals
-            desc_out{idx_angle,idx_tval} = P{idx_angle,idx_tval} * desc_in;
+            desc_out{idx_angle,idx_tval} = M{idx_angle,idx_tval} * desc_in;
         end
     end
     

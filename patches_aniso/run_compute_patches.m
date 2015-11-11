@@ -14,10 +14,12 @@ for idx_shape = 1:length(names)
     % current shape
     name = names{idx_shape}(1:end-4);
     
-    % avoid unnecessary computations
-    if exist(fullfile(paths_.output_matlab,[name,'.mat']),'file') && exist(fullfile(paths_.output_python,[name,'.mat']),'file')
-        fprintf('[i] shape ''%s'' already processed, skipping\n',name);
-        continue;
+    if ~params_.flag_recompute
+        % avoid unnecessary computations
+        if exist(fullfile(paths_.output,[name,'.mat']),'file') %&& exist(fullfile(paths_.output_python,[name,'.mat']),'file')
+            fprintf('[i] shape ''%s'' already processed, skipping\n',name);
+            continue;
+        end
     end
     
     % display info
@@ -28,10 +30,10 @@ for idx_shape = 1:length(names)
     M = compute_patches(name,params_.angles,params_.tvals,paths_,params_);
     
 %     % saving
-%     if ~exist(paths_.output_matlab,'dir')
-%         mkdir(paths_.output_matlab);
+%     if ~exist(paths_.output,'dir')
+%         mkdir(paths_.output);
 %     end
-%     par_save(fullfile(paths_.output_matlab,[name,'.mat']),M);
+%     par_save(fullfile(paths_.output,[name,'.mat']),M);
     
     % convert the patch to Python compatible format
     M = convert_patches_to_python_format(M);
@@ -41,10 +43,10 @@ for idx_shape = 1:length(names)
     M = sparse(r,c,double(v),size(M,1),size(M,2));
     
     % saving
-    if ~exist(paths_.output_python,'dir')
-        mkdir(paths_.output_python);
+    if ~exist(paths_.output,'dir')
+        mkdir(paths_.output);
     end
-    par_save(fullfile(paths_.output_python,[name,'.mat']),M);
+    par_save(fullfile(paths_.output,[name,'.mat']),M);
     
     % display infos
     fprintf('%3.0fs\n',toc(time_start));

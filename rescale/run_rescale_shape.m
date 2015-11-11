@@ -12,8 +12,10 @@ function run_rescale_shape(paths,params)
 %
 
 if nargin < 2
-    params.flag_compute_scale_factor = 1;
+    params.flag_compute_scale_factor_to_unit_diam = 1;
+    params.flag_compute_scale_factor_to_200_diam = 0;
     params.avoid_geods = 0;
+    params.flag_recompute = 1;
 end
 
 % shape instances
@@ -30,10 +32,12 @@ parfor idx_shape = 1:length(names)
     % current shape
     name = names{idx_shape}(1:end-4);
     
-    % avoid unnecessary computations
-    if exist(fullfile(paths_.output,[name,'.mat']),'file')
-        fprintf('[i] shape ''%s'' already processed, skipping\n',name);
-        continue;
+    if ~params_.flag_recompute
+        % avoid unnecessary computations
+        if exist(fullfile(paths_.output,[name,'.mat']),'file')
+            fprintf('[i] shape ''%s'' already processed, skipping\n',name);
+            continue;
+        end
     end
     
     % display info
@@ -45,8 +49,10 @@ parfor idx_shape = 1:length(names)
     shape = tmp.shape;
     
     % compute scale factor
-    if params_.flag_compute_scale_factor
+    if params_.flag_compute_scale_factor_to_unit_diam
         params_.scale_factor = compute_scale_factor_to_unit_diam(shape,params_);
+    elseif params_.flag_compute_scale_factor_to_200_diam
+        params_.scale_factor = compute_scale_factor_to_200_diam(shape,params_);
     end
         
     % rescale shape

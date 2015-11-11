@@ -19,10 +19,12 @@ parfor idx_shape = 1:length(names)
     % current shape
     name = names{idx_shape}(1:end-4);
     
-    % avoid unnecessary computations
-    if exist(fullfile(paths_.output,[name,'.mat']),'file')
-        fprintf('[i] shape %s already processed, skipping\n',name);
-        continue;
+    if ~params_.flag_recompute
+        % avoid unnecessary computations
+        if exist(fullfile(paths_.output,[name,'.mat']),'file')
+            fprintf('[i] shape %s already processed, skipping\n',name);
+            continue;
+        end
     end
     
     % display info
