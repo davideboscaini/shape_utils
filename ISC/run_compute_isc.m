@@ -49,12 +49,18 @@ for idx_shape = 1:length(names)
         desc = abs(fft(desc,[],4));
     end
     
-    isc = zeros(size(desc_in,1), n_angles*n_tvals*size(desc_in,2));
-    for j = 1 : size(desc_in,1)
-        isc(j,:) = reshape(desc(j,:,:,:),1,[]);
-    end
-    desc = isc;
-    %desc = reshape(desc,size(desc_in,1),size(desc_in,2)*n_tvals*n_angles);
+%     tic
+%     
+%     isc = zeros(size(desc_in,1), n_angles*n_tvals*size(desc_in,2));
+%     for j = 1 : size(desc_in,1)
+%         isc(j,:) = reshape(desc(j,:,:,:),1,[]);
+%     end
+%     desc = isc;
+%     toc
+%     
+%     tic
+    desc = reshape(desc,size(desc_in,1),size(desc_in,2)*n_tvals*n_angles);
+%     toc
     
     % saving
     if ~exist(paths.output,'dir')

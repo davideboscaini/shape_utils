@@ -67,6 +67,8 @@ for i = 1:size(shape.X,1)
        fprintf('    %d/%d %2.0fs\n',i,size(shape.X,1),toc(start_time));
     end
     
+    fprintf('%f\n',max(dists(i,:)));
+    
     % compute disks
     shape.D = dists(i,:)';
     

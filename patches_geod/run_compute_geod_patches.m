@@ -1,28 +1,11 @@
-function run_rescale_shape(paths,params)
-%
-% run_rescale_shape(paths,params)
-%    rescales the given shapes
-%
-% inputs:
-%    paths, struct containing the following fields
-%       input, path to the folder containing the input shapes
-%       output, path to the folder where to save the rescaled shapes
-%    params, struct containing the following fields
-%       flag_compute_scale_factor
-%
-
-if nargin < 2
-    params.flag_compute_scale_factor_to_unit_diam = 1;
-    params.avoid_geods = 0;
-    params.flag_recompute = 1;
-end
+function run_compute_geod_patches(paths,params)
 
 % shape instances
 tmp = dir(fullfile(paths.input,'*.mat'));
 names = sortn({tmp.name}); clear tmp;
 
 % loop over the shape instances
-parfor idx_shape = 1:length(names)
+for idx_shape = 1:length(names)
     
     % re-assigning structs variables to avoid parfor errors
     paths_ = paths;
@@ -43,23 +26,24 @@ parfor idx_shape = 1:length(names)
     fprintf('[i] processing shape ''%s'' (%3.0d/%3.0d)... ',name,idx_shape,length(names));
     time_start = tic;
     
-    % load current shape
+    % load current eigendecomposition
     tmp = load(fullfile(paths_.input,[name,'.mat']));
     shape = tmp.shape;
     
-    % compute scale factor
-    if params_.flag_compute_scale_factor_to_unit_diam
-        params_.scale_factor = compute_scale_factor_to_unit_diam(shape,params_);
-    end
-        
-    % rescale shape
-    shape = rescale_shape(shape,params_.scale_factor);
+    M = compute_geod_patches(name,paths_,params_);
+    
+    % [M, ~] = compute_extraction(shape, params_);
+    
+    % make a big matrix out of all the various M_i
+    % each matrix in the cell array is stacked row after row.
+    % this allows a more efficient moltiplication and handling in theano
+    M = sparse(cat(1,M{:}));
     
     % saving
     if ~exist(paths_.output,'dir')
         mkdir(paths_.output);
     end
-    par_save(fullfile(paths_.output,[name,'.mat']),shape);
+    par_save(fullfile(paths_.output,[name,'.mat']),M);
     
     % display info
     fprintf('%2.0fs\n',toc(time_start));
@@ -68,6 +52,6 @@ end
 
 end
 
-function par_save(path,shape)
-save(path,'shape','-v7.3')
+function par_save(path,M)
+save(path,'M','-v7.3')
 end

@@ -8,6 +8,9 @@ patch_out = cat(1,patch_in{:});
 patch_out = reshape(patch_out,n,n_angles,n_tvals,n);
 patch_out = reshape(patch_out,n,n_angles*n_tvals*n)';
 
+patch_out = permute(reshape(patch_out,n_angles*n_tvals,n,n),[1,3,2]);
+patch_out = reshape(patch_out,n_angles*n_tvals*n,n,[]);
+
 % obsolete:
 % patch_out = zeros(n*n_angles*n_tvals,n);
 % count = 1;
