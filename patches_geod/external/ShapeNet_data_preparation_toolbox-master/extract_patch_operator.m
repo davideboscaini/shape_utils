@@ -5,7 +5,7 @@ if ~exist(dstpath, 'dir')
 end
 
 fnames = dir(fullfile(srcpath, '*.mat'));
-parfor i = 1 : length(fnames)
+for i = 1 : length(fnames)
     if exist(fullfile(dstpath, fnames(i).name), 'file')
         fprintf('%s already processed, skipping\n', fnames(i).name)
         continue

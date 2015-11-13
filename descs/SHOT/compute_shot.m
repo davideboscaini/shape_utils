@@ -19,7 +19,7 @@ function desc = compute_shot(shape,params)
 
 if nargin < 2
     shot_bins = 16;
-    surface_area = compute_area([shape.X,shape.Y,shape.Z],shape.TRIV);
+    surface_area = compute_surface_area([shape.X,shape.Y,shape.Z],shape.TRIV);
     max_radius = 6 * sqrt(sum(surface_area)) / 100;
     shot_min_neighs = 3;
 else

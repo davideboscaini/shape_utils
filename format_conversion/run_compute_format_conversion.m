@@ -28,7 +28,7 @@ parfor idx_shape = 1:length(names)
     
     if ~params_.flag_recompute
         % avoid unnecessary computations
-        if exist(fullfile(paths_.output,[name,'.',params.format_out]),'file')
+        if exist(fullfile(paths_.output,[name,'.',params_.format_out]),'file')
             fprintf('[i] shape ''%s'' already processed, skipping\n',name);
             continue;
         end
