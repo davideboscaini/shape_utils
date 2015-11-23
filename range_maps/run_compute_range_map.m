@@ -53,5 +53,5 @@ end
 end
 
 function par_save(path,shape,idxs)
-save(path,'M','depth','matches','-v7.3');
+save(path,'shape','idxs','-v7.3');
 end

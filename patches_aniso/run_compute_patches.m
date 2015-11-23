@@ -28,7 +28,8 @@ for idx_shape = 1:length(names)
     
     % compute patch
     M = compute_patches(name,params_.angles,params_.tvals,paths_,params_);
-    
+    %M = compute_aniso_patches_pade(name,params_.angles,params_.tvals,paths_,params_);
+     
 %     % saving
 %     if ~exist(paths_.output,'dir')
 %         mkdir(paths_.output);
