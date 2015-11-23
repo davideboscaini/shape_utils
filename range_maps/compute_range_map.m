@@ -1,4 +1,4 @@
-function [M,depth,matches] = compute_range_map(shape,params)
+function [shape,idxs] = compute_range_map(shape,params)
 
 S.VERT = [shape.X,shape.Y,shape.Z];
 S.TRIV = shape.TRIV;
@@ -17,3 +17,9 @@ S.VERT = S.VERT * [cos(view_angle),0,-sin(view_angle);0,1,0;sin(view_angle),0,co
 M.VERT = M.VERT - repmat(mean(M.VERT),M.n,1);
 M.VERT = M.VERT ./ coef;
 
+shape.X = M.VERT(:,1);
+shape.Y = M.VERT(:,2);
+shape.Z = M.VERT(:,3);
+shape.TRIV = M.TRIV;
+
+idxs = matches;

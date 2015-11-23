@@ -8,11 +8,7 @@ names = sortn({tmp.name}); clear tmp;
 parfor idx_shape = 1:length(names)
     
     %
-    params_ = struct;
     params_ = params; 
-    
-    %
-    paths_ = struct;
     paths_ = paths;
     
     % current shape
@@ -39,13 +35,13 @@ parfor idx_shape = 1:length(names)
         
         params_.view_angle = view_angles(idx_view_angle);
         
-        [M,depth,matches] = compute_range_map(shape,params_);
+        [shape,idxs] = compute_range_map(shape,params_);
     
         % saving
         if ~exist(paths_.output,'dir')
             mkdir(paths_.output);
         end
-        par_save(fullfile(paths_.output,[name,'_',sprintf('%03.0f',idx_view_angle),'.mat']),M,depth,matches);
+        par_save(fullfile(paths_.output,[name,'_',sprintf('%03.0f',idx_view_angle),'.mat']),shape,idxs);
     
     end
     
@@ -56,6 +52,6 @@ end
 
 end
 
-function par_save(path,M,depth,matches)
+function par_save(path,shape,idxs)
 save(path,'M','depth','matches','-v7.3');
 end

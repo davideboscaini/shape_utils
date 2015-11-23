@@ -37,12 +37,7 @@ parfor idx_shape = 1:length(names)
     A = tmp.A;
     
     % compute the eigendecomposition
-    [Phi,Lambda] = eigs(W,A,params_.k,params_.shift);
-
-    % re-order the eigenvectors according to the eigenvalues
-    Lambda = diag(abs(Lambda));
-    [Lambda,idxs] = sort(Lambda);
-    Phi = Phi(:,idxs);
+    [Phi,Lambda] = compute_eigendec(W,A,params_);
     
     % saving
     if ~exist(paths_.output,'dir')

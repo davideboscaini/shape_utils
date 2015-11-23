@@ -15,10 +15,16 @@ function desc = compute_hks(Phi,Lambda,tvals)
 %    desc, heat kernel signature (HKS) descriptor
 %
 
-n_vertices = size(Phi,1);
-n_desc = length(tvals);
-desc = zeros(n_vertices,n_desc);
+% n_vertices = size(Phi,1);
+% n_desc = length(tvals);
+% desc = zeros(n_vertices,n_desc);
+% 
+% for idx_tval = 1:length(tvals)
+%     desc(:,idx_tval) = sum((Phi.^2).*repmat(exp(-tvals(idx_tval)*Lambda(:))',[n_vertices,1]),2);
+% end
 
-for idx_tval = 1:length(tvals)
-    desc(:,idx_tval) = sum((Phi.^2).*repmat(exp(-tvals(idx_tval)*Lambda(:))',[n_vertices,1]),2);
-end
+exp_val = exp(-bsxfun(@times,Lambda(:),tvals(:)'));
+desc = bsxfun(@times,(Phi.^2)*exp_val,tvals(:)')';
+%desc = bsxfun(@rdivide,desc,sqrt(sum(desc.^2,2)));
+desc = normalize(desc,'l2',1);
+desc = desc';

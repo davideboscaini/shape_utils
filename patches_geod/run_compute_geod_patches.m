@@ -5,7 +5,7 @@ tmp = dir(fullfile(paths.input,'*.mat'));
 names = sortn({tmp.name}); clear tmp;
 
 % loop over the shape instances
-for idx_shape = 1:length(names)
+parfor idx_shape = 1:length(names)
     
     % re-assigning structs variables to avoid parfor errors
     paths_ = paths;
@@ -27,12 +27,11 @@ for idx_shape = 1:length(names)
     time_start = tic;
     
     % load current eigendecomposition
-    tmp = load(fullfile(paths_.input,[name,'.mat']));
-    shape = tmp.shape;
+    %tmp = load(fullfile(paths_.input,[name,'.mat']));
+    %shape = tmp.shape;
+    % [M, ~] = compute_extraction(shape, params_);
     
     M = compute_geod_patches(name,paths_,params_);
-    
-    % [M, ~] = compute_extraction(shape, params_);
     
     % make a big matrix out of all the various M_i
     % each matrix in the cell array is stacked row after row.

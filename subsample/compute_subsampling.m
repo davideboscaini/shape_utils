@@ -35,7 +35,7 @@ if nargin < 3
     params.penalty   = 1;
 end    
 
-params.vertices = params.n;
+% params.vertices = params.n;
 [TRIV,X,Y,Z] = remesh(shape_in,params);
 
 shape_out      = struct;

@@ -8,7 +8,7 @@ function run_compute_subsampling(paths,params)
 %    params,
 %
 
-if nargin < 4
+if nargin < 2
     params.vertices = 1000;
     params.verbose = 1;
     params.placement = 0;
@@ -46,7 +46,7 @@ if params.preserve_triangulation
 end
 
 % loop over the shape instances
-parfor idx_shape = 1:length(names)
+for idx_shape = 1:length(names)
     
     % re-assigning structs variables to avoid parfor errors
     paths_ = paths;
@@ -78,7 +78,7 @@ parfor idx_shape = 1:length(names)
         shape_sub.TRIV = TRIV;
         shape = shape_sub;
     else
-        shape = compute_subsampling(shape_,params_);
+        shape = compute_subsampling(shape,params_);
     end
     
     % saving
