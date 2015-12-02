@@ -21,5 +21,11 @@ else
     R = Fs.target' * Phis.target;
 end
 
-C = L \ R;
+if strcmp(params.solver,'backslash')
+    C = L \ R;
+elseif strcmp(params.solver,'pinv')
+    C = pinv(L) * R;
+end
+
 C = C';
+
