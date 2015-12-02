@@ -16,13 +16,17 @@ params_ann.iterations = -1;
 kN = size(Phis.target,1);
 
 % flann_search(target, query)
-[idxs, dists] = flann_search(Phis.target', C_in * Phis.query', 1, params_ann);
+if params.flag_area
+    [idxs, dists] = flann_search(Phis.target' * As.target, C_in * Phis.query' * As.query, 1, params_ann);
+else
+    [idxs, dists] = flann_search(Phis.target', C_in * Phis.query', 1, params_ann);
+end
 
 err = sum(sqrt(dists));
 err = err / (kN * size(C_in,1));
 
 if params.flag_verbose
-    fprintf('[i] iter: %3.0f, MSE: %3.2f\n', 0, err);
+    fprintf('[i] iter: %3.0f, MSE: %1.6e\n', 0, err);
 end
 
 if params.max_iters == 0
@@ -39,7 +43,12 @@ idxs_prev = idxs;
 
 for i = 1:params.max_iters
     
-    [U,~,V] = svd(Phis.query' * Phis.target(idxs,:));
+    if params.flag_area
+        [U,~,V] = svd(Phis.query' * As.query * Phis.target(idxs,:));
+    else
+        [U,~,V] = svd(Phis.query' * Phis.target(idxs,:));
+    end
+    
     C_out = U * V';
     C_out = C_out';
     
@@ -49,7 +58,7 @@ for i = 1:params.max_iters
     err = err / (kN * size(C_in,1));
     
     if params.flag_verbose
-        fprintf('[i] iter: %3.0f, MSE: %3.2f\n', i, err);
+        fprintf('[i] iter: %3.0f, MSE: %1.6e\n', i, err);
     end
     
     if err > err_prev
@@ -61,7 +70,7 @@ for i = 1:params.max_iters
         break;
     end
     
-    if (err_prev - err) < params.tol 
+    if (err_prev - err) < params.tol
         if params.flag_verbose
             fprintf('[i] local optimum reached, quitting...\n');
         end
