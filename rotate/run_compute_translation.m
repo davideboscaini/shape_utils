@@ -13,27 +13,32 @@ function run_compute_translation(paths,params)
 %       signs, which sign to assign to the coordinates
 %
 
-if nargin < 3
-    flag_params = 0;
-else
-    flag_params = 1;
-end
+% if nargin < 2
+%     flag_params = 0;
+% else
+%     flag_params = 1;
+% end
 
 % dataset instances
-tmp   = dir(fullfile(path_input,'*.mat'));
+tmp   = dir(fullfile(paths.input,'*.mat'));
 names = sortn({tmp.name}); clear tmp;
 
 % loop over the dataset instances
 n_shapes = length(names);
-parfor idx_shape = 1:n_shapes
+for idx_shape = 1:n_shapes
+    
+    paths_ = paths;
+    params_ = params;
     
     % current shape
     name = names{idx_shape}(1:end-4);
     
     %
-    if exist(fullfile(path_output,[name,'.mat']),'file')
-        fprintf('[i] shape ''%s'' already processed, skipping\n',name);
-        continue;
+    if ~params_.flag_recompute
+        if exist(fullfile(paths_.output,[name,'.mat']),'file')
+            fprintf('[i] shape ''%s'' already processed, skipping\n',name);
+            continue;
+        end
     end
     
     % display infos
@@ -41,21 +46,21 @@ parfor idx_shape = 1:n_shapes
     time_start = tic;
     
     % load current shape
-    tmp   = load(fullfile(path_input,[name,'.mat']));
+    tmp   = load(fullfile(paths_.input,[name,'.mat']));
     shape = tmp.shape;
 
     %
-    if flag_params
-        shape = compute_translation(shape,params);
-    else
-        shape = compute_translation(shape);
-    end
+    %if flag_params
+    %    shape = compute_translation(shape,params_);
+    %else
+    shape = compute_translation(shape);
+    %end
     
     % saving
-    if ~exist(path_output,'dir')
-        mkdir(path_output);
+    if ~exist(paths_.output,'dir')
+        mkdir(paths_.output);
     end
-    par_save(fullfile(path_output,[name,'.mat']),shape);
+    par_save(fullfile(paths_.output,[name,'.mat']),shape);
     
     % display info
     fprintf('%2.0fs\n',toc(time_start));

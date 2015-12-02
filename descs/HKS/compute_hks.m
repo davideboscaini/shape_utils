@@ -25,6 +25,5 @@ function desc = compute_hks(Phi,Lambda,tvals)
 
 exp_val = exp(-bsxfun(@times,Lambda(:),tvals(:)'));
 desc = bsxfun(@times,(Phi.^2)*exp_val,tvals(:)')';
-%desc = bsxfun(@rdivide,desc,sqrt(sum(desc.^2,2)));
 desc = normalize(desc,'l2',1);
 desc = desc';
