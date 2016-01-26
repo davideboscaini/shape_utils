@@ -1,11 +1,11 @@
-function run_compute_lbo(paths,params)
+function run_compute_sihks(paths,params)
 
 % shape instances
 tmp = dir(fullfile(paths.input,'*.mat'));
 names = sortn({tmp.name}); clear tmp;
 
 % loop over the shape instances
-for idx_shape = 1:length(names)
+parfor idx_shape = 1:length(names)
     
     % re-assigning structs variables to avoid parfor errors
     paths_ = paths;
@@ -26,18 +26,19 @@ for idx_shape = 1:length(names)
     fprintf('[i] processing shape ''%s'' (%3.0d/%3.0d)... ',name,idx_shape,length(names));
     time_start = tic;
     
-    % load current shape
+    % load current eigendecomposition
     tmp = load(fullfile(paths_.input,[name,'.mat']));
-    shape = tmp.shape;
+    Phi = tmp.Phi;
+    Lambda = tmp.Lambda;
     
-    % compute the Laplace-Beltrami operator
-    [W,A] = compute_lbo(shape);
+    % compute the heat kernel signature (HKS)
+    desc = compute_sihks(Phi,Lambda,params_);
     
     % saving
     if ~exist(paths_.output,'dir')
         mkdir(paths_.output);
     end
-    par_save(fullfile(paths_.output,[name,'.mat']),W,A);
+    par_save(fullfile(paths_.output,[name,'.mat']),desc);
     
     % display info
     fprintf('%2.0fs\n',toc(time_start));
@@ -46,6 +47,6 @@ end
 
 end
 
-function par_save(path,W,A)
-save(path,'W','A','-v7.3');
+function par_save(path,desc)
+save(path,'desc','-v7.3')
 end

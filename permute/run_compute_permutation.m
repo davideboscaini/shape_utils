@@ -1,11 +1,12 @@
-function run_compute_lbo(paths,params)
+function run_compute_permutation(paths,params)
+%
 
 % shape instances
 tmp = dir(fullfile(paths.input,'*.mat'));
 names = sortn({tmp.name}); clear tmp;
 
 % loop over the shape instances
-for idx_shape = 1:length(names)
+parfor idx_shape = 1:length(names)
     
     % re-assigning structs variables to avoid parfor errors
     paths_ = paths;
@@ -30,14 +31,14 @@ for idx_shape = 1:length(names)
     tmp = load(fullfile(paths_.input,[name,'.mat']));
     shape = tmp.shape;
     
-    % compute the Laplace-Beltrami operator
-    [W,A] = compute_lbo(shape);
+    % permute the shape vertices 
+    shape = compute_permutation(shape);
     
     % saving
     if ~exist(paths_.output,'dir')
         mkdir(paths_.output);
     end
-    par_save(fullfile(paths_.output,[name,'.mat']),W,A);
+    par_save(fullfile(paths_.output,[name,'.mat']),shape);
     
     % display info
     fprintf('%2.0fs\n',toc(time_start));
@@ -46,6 +47,6 @@ end
 
 end
 
-function par_save(path,W,A)
-save(path,'W','A','-v7.3');
+function par_save(path,shape)
+save(path,'shape','-v7.3')
 end

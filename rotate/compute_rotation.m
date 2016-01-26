@@ -34,4 +34,7 @@ vertices_out = [[signs(1)*vertices_in(:,idxs(1)), signs(2)*vertices_in(:,idxs(2)
 shape_out.X = vertices_out(:,1);
 shape_out.Y = vertices_out(:,2);
 shape_out.Z = vertices_out(:,3);
-shape_out.TRIV = shape_in.TRIV;
+
+if isfield(shape_in,'TRIV')
+    shape_out.TRIV = shape_in.TRIV;
+end

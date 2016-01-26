@@ -10,14 +10,14 @@ function C = compute_func_map(Phis,As,Fs,params)
 % T = PhiY C PhiX' AX
 %
 
-Phis.query = Phis.query(:,1:params.k);
+Phis.query  = Phis.query(:,1:params.k);
 Phis.target = Phis.target(:,1:params.k);
 
 if params.flag_area
-    L = Fs.query' * As.query * Phis.query;
+    L = Fs.query'  * As.query  * Phis.query;
     R = Fs.target' * As.target * Phis.target; 
 else
-    L = Fs.query' * Phis.query;
+    L = Fs.query'  * Phis.query;
     R = Fs.target' * Phis.target;
 end
 

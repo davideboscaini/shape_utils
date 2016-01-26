@@ -17,4 +17,4 @@ sphere.Y    = tmp.vertices(:,2) + center(2);
 sphere.Z    = tmp.vertices(:,3) + center(3);
 sphere.TRIV = tmp.faces;
 
-plot_shape(sphere);
+trisurf(sphere.TRIV,sphere.X,sphere.Y,sphere.Z,'facecolor',params.rgb,'edgecolor','none');

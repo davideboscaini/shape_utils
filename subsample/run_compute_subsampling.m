@@ -78,7 +78,12 @@ for idx_shape = 1:length(names)
         shape_sub.TRIV = TRIV;
         shape = shape_sub;
     else
-        shape = compute_subsampling(shape,params_);
+        %shape = compute_subsampling(shape,params_);
+        [F_,V_] = reducepatch(shape.TRIV,[shape.X,shape.Y,shape.Z],params_.faces);
+        shape.TRIV = F_;
+        shape.X = V_(:,1);
+        shape.Y = V_(:,2);
+        shape.Z = V_(:,3);
     end
     
     % saving

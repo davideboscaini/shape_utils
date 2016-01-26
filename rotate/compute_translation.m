@@ -23,4 +23,7 @@ end
 shape_out.X = shape_in.X + displacement(1);
 shape_out.Y = shape_in.Y + displacement(2);
 shape_out.Z = shape_in.Z + displacement(3);
-shape_out.TRIV = shape_in.TRIV;
+
+if isfield(shape_in,'TRIV')
+    shape_out.TRIV = shape_in.TRIV;
+end
