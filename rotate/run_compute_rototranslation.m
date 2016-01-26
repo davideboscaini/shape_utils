@@ -57,7 +57,7 @@ parfor idx_shape = 1:length(names)
     if flag_params_roto
         shape = compute_rotation(shape,params_);
     else
-        shape = compute_rotation(shape,params_);
+        shape = compute_rotation(shape);
     end
     
     if flag_params_trasl

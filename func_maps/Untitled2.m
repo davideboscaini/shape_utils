@@ -5,7 +5,7 @@ clc;
 % names
 names.target           = 'tr_reg_000';
 names.query_input_file = 'FAUST_registrations_query';
-names.preds            = 'iccv';
+names.preds            = 'random_forests';
 % idxs
 idxs.gt = [1:6890]';
 % paths
@@ -19,8 +19,8 @@ paths.names_query = fullfile(paths.main,'datasets\FAUST_registrations\data');
 paths.preds       = fullfile(paths.main,'dumps',names.preds);
 % params
 params.solver         = 'pinv';
-params.k              = 1000;
-params.q              = 6890/2;
+params.k              = 250;
+params.q              = 4500;
 params.flag_area      = 1;
 params.flag_recompute = 1;
 % output folder
