@@ -27,7 +27,7 @@ for idx_angle = 1:length(angles)
     angle = angles(idx_angle);
     
     % load anisotropic Laplace-Beltrami operator
-    tmp = load(fullfile(paths.eigendec,sprintf('alpha=%03.0f',params.alpha),sprintf('angle=%03.0f',rad2deg(angle)),[name,'.mat']));
+    tmp = load(fullfile(paths.eigendec,sprintf('alpha=%03.0f',params.alpha),sprintf('angle=%03.0f',(180/pi) * angle),[name,'.mat']));
     Phi = tmp.Phi;
     Lambda = tmp.Lambda;
     
