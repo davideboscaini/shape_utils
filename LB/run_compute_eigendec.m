@@ -10,7 +10,7 @@ tmp = dir(fullfile(paths.input,'*.mat'));
 names = sortn({tmp.name}); clear tmp;
 
 % loop over the shape instances
-for idx_shape = 1:length(names)
+parfor idx_shape = 1:length(names)
     
     % re-assigning structs variables to avoid parfor errors
     paths_ = paths;
