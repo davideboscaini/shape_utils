@@ -10,7 +10,7 @@ tmp = dir(fullfile(paths.input,'*.mat'));
 names = sortn({tmp.name}); clear tmp;
 
 % loop over the shape instances
-for idx_shape = 1:length(names)
+parfor idx_shape = 1:length(names)
     
     % re-assigning structs variables to avoid parfor errors
     paths_ = paths;
@@ -37,8 +37,12 @@ for idx_shape = 1:length(names)
     A = tmp.A;
     
     % compute the eigendecomposition
-    [Phi,Lambda] = compute_eigendec(W,A,params_);
-    
+    try 
+        [Phi,Lambda] = compute_eigendec(W,A,params_);
+    catch
+        continue;
+    end
+        
     % saving
     if ~exist(paths_.output,'dir')
         mkdir(paths_.output);

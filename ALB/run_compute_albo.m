@@ -40,6 +40,11 @@ parfor idx_shape = 1:length(names)
         
         % compute the anisotropic Laplace-Beltrami operator
         [W,A] = compute_albo(shape,angle,params_);
+        %try 
+        %    [W,A] = compute_albo(shape,angle,params_);
+        %catch
+        %    continue;
+        %end
         
         % saving
         paths_.output_ = fullfile(paths_.output,sprintf('alpha=%03.0f',params_.alpha),sprintf('angle=%03.0f',rad2deg(angle)));

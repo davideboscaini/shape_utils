@@ -27,9 +27,14 @@ for idx_angle = 1:length(angles)
     angle = angles(idx_angle);
     
     % load anisotropic Laplace-Beltrami operator
-    tmp = load(fullfile(paths.eigendec,sprintf('alpha=%03.0f',params.alpha),sprintf('angle=%03.0f',(180/pi) * angle),[name,'.mat']));
+    %try
+        tmp = load(fullfile(paths.eigendec,sprintf('alpha=%03.0f',params.alpha),sprintf('angle=%03.0f',(180/pi) * angle),[name,'.mat']));
+    %catch
+        %continue;
+    %end
     Phi = tmp.Phi;
-    Lambda = tmp.Lambda;
+    Lambda = tmp.Lambda; 
+    clear tmp;
     
     % loop over the time values
     for idx_tval = 1:length(tvals)
@@ -37,11 +42,17 @@ for idx_angle = 1:length(angles)
         tval = tvals(idx_tval);
         
         % compute anisotropic heat kernel
-        patches_ = Phi * ( diag(exp(-tval.*Lambda))*Phi' );
+        patches_ = Phi * ( sparse(diag(exp(-tval.*Lambda)) ) * Phi' );
         
         % normalize each (directional) kernel in order to have unit norm
-        if params.flag_unit_norm
+        if params.flag_L2_norm
             patches_ = bsxfun(@rdivide,patches_,sqrt(sum(patches_.^2,2)));
+        end
+        if params.flag_L1_norm
+            patches_ = bsxfun(@rdivide,patches_,sqrt(sum(abs(patches_),2)));
+        end
+        if params.flag_max_norm
+            patches_ = bsxfun(@rdivide,patches_,max(abs(patches_),[],2));
         end
         
         % threshold (enforce sparsity)
@@ -58,6 +69,7 @@ for idx_angle = 1:length(angles)
         
         % store in the data structure
         patches{idx_angle,idx_tval} = patches_;
+        clear patches_;
         
         % % slower code:
         % [I,J] = ind2sub([size(Phi,1),size(Phi,1)],find(mask));

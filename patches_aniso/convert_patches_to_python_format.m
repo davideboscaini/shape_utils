@@ -5,6 +5,7 @@ n_tvals = size(patch_in,2);
 n = size(patch_in{1,1},2);
 
 patch_out = cat(1,patch_in{:});
+clear patch_in;
 patch_out = reshape(patch_out,n,n_angles,n_tvals,n);
 patch_out = reshape(patch_out,n,n_angles*n_tvals*n)';
 

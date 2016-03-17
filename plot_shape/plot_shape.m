@@ -58,6 +58,7 @@ elseif nargin == 3
     if ~isfield(params,'flag_antialiasing')
         params.flag_antialiasing = 0;
     end
+    
 else
     error('[e] too many input arguments');
 end
@@ -83,6 +84,8 @@ if isempty(func)
     freezeColors;
     
 else
+    
+    func = full(func);
     
     if size(func,2) > size(func,1)
         func = func';

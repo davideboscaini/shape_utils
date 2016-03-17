@@ -9,6 +9,9 @@ end
 if ~isfield(params,'radius')
     params.radius = 1;
 end
+if ~isfield(params,'rgb')
+    params.rgb = [0,0,0];
+end
 
 tmp = sphere_tri('ico',params.refine,params.radius);
 

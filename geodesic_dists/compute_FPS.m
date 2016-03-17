@@ -12,7 +12,7 @@ function idxs = compute_FPS(shape,params)
 %    params, struct containing the following fields
 %            q, number of desired samples
 %            flag_dist, desired metric
-%                         possible choiches: Eucl or geod
+%                       possible choiches: Eucl or geod
 %            flag_random, if 1 the sampling starts from a random vertex,
 %                         otherwise a random seed is fixed
 %
