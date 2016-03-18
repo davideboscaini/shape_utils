@@ -14,6 +14,7 @@ function plot_shape(shape,varargin)
 %       n_isolines, specify how many isolines to plot
 %       n_rows, in case of more than one function in input, specify the number of rows for the subplot
 %       flag_antialiasing, if 1 the antialiasing is considered for the rendering 
+%       title, plot title
 %
 
 if nargin == 1
@@ -25,6 +26,7 @@ if nargin == 1
     params.n_isolines = 0;
     params.n_rows = 1;
     params.flag_antialiasing = 0;
+    params.title = [];
 elseif nargin == 2
     func = varargin{1};
     params.flag_newfig = 0;
@@ -34,6 +36,7 @@ elseif nargin == 2
     params.n_isolines = 0;
     params.n_rows = 1;
     params.flag_antialiasing = 0;
+    params.title = [];
 elseif nargin == 3
     func = varargin{1};
     params = varargin{2};
@@ -58,7 +61,9 @@ elseif nargin == 3
     if ~isfield(params,'flag_antialiasing')
         params.flag_antialiasing = 0;
     end
-    
+    if ~isfield(params,'title')
+        params.title = [];
+    end    
 else
     error('[e] too many input arguments');
 end
@@ -70,6 +75,7 @@ end
 if isempty(func)
     
     trisurf(shape.TRIV,shape.X,shape.Y,shape.Z);
+    title(params.title,'fontweight','normal');
     camoscio = [240,220,130]./255;
     colormap(camoscio);
     axis image;
@@ -80,7 +86,7 @@ if isempty(func)
         camlight;
     end
     set(gcf,'color','white');
-    set(gca,'visible','off');
+    axis off;
     freezeColors;
     
 else
@@ -93,10 +99,11 @@ else
     
     if (size(func,2)==1)
         
-        colormap('default');
+        colormap('jet');
         if params.flag_isolines
             % colormap(jet(n_isolines));
             trisurf(shape.TRIV,shape.X,shape.Y,shape.Z,'CData',func,'FaceColor','interp','FaceLighting','phong','EdgeColor','none');
+            title(params.title,'fontweight','normal');
             axis image;
             axis off;
             [LS,LD,I] = isolines([shape.X,shape.Y,shape.Z],shape.TRIV,func,linspace(min(func),max(func),n_isolines+1));
@@ -105,6 +112,7 @@ else
             hold off;
         else
             trisurf(shape.TRIV,shape.X,shape.Y,shape.Z,func);
+            title(params.title,'fontweight','normal');
         end
         % caxis( [-max(abs(err)), max(abs(err))] );
         % colormap(redblue(256));
@@ -118,16 +126,17 @@ else
             camlight;
         end
         set(gcf,'color','white');
-        set(gca,'visible','off');
+        axis off;
         
     else % size(func,2)>1
         
-        colormap('default');
+        colormap('jet');
         for i = 1:size(func,2)
             subplot(params.n_rows,ceil(size(func,2)/params.n_rows),i);
             if params.flag_isolines
                 % colormap(jet(n_isolines));
                 trisurf(shape.TRIV,shape.X,shape.Y,shape.Z,'CData',func(:,i),'FaceColor','interp','FaceLighting','phong','EdgeColor','none');
+                title(params.title,'fontweight','normal');
                 axis image;
                 axis off;
                 [LS,LD,I] = isolines([shape.X,shape.Y,shape.Z],shape.TRIV,func(:,i),linspace(min(func(:,i)),max(func(:,i)),n_isolines+1));
@@ -136,6 +145,7 @@ else
                 hold off;
             else
                 trisurf(shape.TRIV,shape.X,shape.Y,shape.Z,func(:,i));
+                title(params.title,'fontweight','normal');
             end
             % caxis( [-max(abs(err(:,i))), max(abs(err(:,i)))] );
             % colormap(bluewhitered(256));
@@ -149,7 +159,7 @@ else
                 camlight;
             end
             set(gcf, 'Color', [1,1,1]);
-            set(gca, 'visible', 'off');
+            axis off;
             
         end
         

@@ -29,14 +29,30 @@ function shape_out = compute_subsampling(shape_in,params)
 %               TRIV, triangular mesh connectivity (matrix of size |vertices| x 3)
 %
 
-if nargin < 3
+if nargin < 2
+    params.n         = 1000;
     params.verbose   = 1;
     params.placement = 0;
     params.penalty   = 1;
 end    
 
-% params.vertices = params.n;
-[TRIV,X,Y,Z] = remesh(shape_in,params);
+if strcmp(params.method,'qslim')
+    if ~isfield(params,'n')
+        params.n = 1000;
+    end
+    if ~isfield(params,'verbose')
+        params.verbose   = 1;
+    end
+    if ~isfield(params,'placement')
+        params.placement = 0;
+    end
+    if ~isfield(params,'penalty')
+        params.penalty   = 1;
+    end
+    [TRIV,X,Y,Z] = remesh(shape_in,params);
+elseif strcmp(params.method,'matlab')
+    [TRIV,X,Y,Z] = remesh(shape_in,params);
+end
 
 shape_out      = struct;
 shape_out.TRIV = TRIV;
