@@ -29,7 +29,7 @@ function map = colormap_helper(map, len, lims)
 %         inter-color bins.
 %   B - size(A)x3 truecolor array.
 
-% $Id: colormap_helper.m,v 1.4 2009/04/13 12:16:22 ojw Exp $
+% colormap_helper.m,v 1.4 2009/04/13 12:16:22
 % Copyright: Oliver Woodford, 2009
 
 if nargin < 2
