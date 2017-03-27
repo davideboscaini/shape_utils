@@ -1,6 +1,6 @@
 function patches = compute_aniso_patches_pade(name,angles,tvals,paths,params)
 %
-% patches = compute_patches(tvals,angles,paths,params)
+% patches = compute_aniso_patches_pade(name,angles,tvals,paths,params)
 %    computes the ...
 %
 % inputs:

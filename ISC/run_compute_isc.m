@@ -8,10 +8,18 @@ names_ = dir(fullfile(paths.input,'*.mat'));
 names = sortn({names_.name}); clear names_;
 
 % loop over the shape instances
-for idx_shape = 1:length(names)
+for idx_shape = 80:length(names)
     
     % current shape
     name = names{idx_shape}(1:end-4);
+    
+    if ~params.flag_recompute
+        % avoid unnecessary computations
+        if exist(fullfile(paths.output,[name,'.mat']),'file')
+            fprintf('[i] shape ''%s'' already processed, skipping\n',name);
+            continue;
+        end
+    end
     
     % display infos
     fprintf('[i] processing shape ''%s'' (%3.0d/%3.0d)... ',name,idx_shape,length(names));

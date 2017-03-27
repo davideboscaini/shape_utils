@@ -40,7 +40,7 @@ parfor idx_shape = 1:length(names)
     shape = tmp.shape;
     
     % compute geodesic distances
-    idxs = [1:length(shape.X)]';
+    idxs  = [1:length(shape.X)]';
     geods = compute_geods(shape,idxs);
     
     % saving

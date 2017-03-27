@@ -46,11 +46,11 @@ for idx_angle = 1:length(names_angles)
         A = tmp.A;
         
         % compute the eigendecomposition
-        try
+        %try
             [Phi,Lambda] = eigs(W,A,params_.k,params_.shift);
-        catch
-            continue;
-        end
+        %catch
+        %    continue;
+        %end
         
         % re-order the eigenvectors according to the eigenvalues
         Lambda = diag(abs(Lambda));

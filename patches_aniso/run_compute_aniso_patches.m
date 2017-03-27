@@ -1,4 +1,4 @@
-function run_compute_patches(paths,params)
+function run_compute_aniso_patches(paths,params)
 
 % shape instances
 names_ = dir(fullfile(paths.input,'*.mat'));
@@ -27,7 +27,7 @@ for idx_shape = 1:length(names)
     time_start = tic;
     
     % compute patch
-    M = compute_patches(name,params_.angles,params_.tvals,paths_,params_);
+    M = compute_aniso_patches(name,params_.angles,params_.tvals,paths_,params_);
     %M = compute_aniso_patches_pade(name,params_.angles,params_.tvals,paths_,params_);
      
 %     % saving
@@ -37,7 +37,7 @@ for idx_shape = 1:length(names)
 %     par_save(fullfile(paths_.output,[name,'.mat']),M);
     
     % convert the patch to Python compatible format
-    M = convert_patches_to_python_format(M);
+    M = convert_aniso_patches_to_python_format(M);
     
     % convert to sparse format to save memory
     [r,c,v] = find(M);

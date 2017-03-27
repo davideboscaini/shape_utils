@@ -1,4 +1,4 @@
-function shape_out = compute_translation(shape_in,params)
+function [shape_out, displacement] = compute_translation(shape_in,params)
 %
 % shape_out = compute_translation(shape_in,displacement)
 %    translates the input shape according to the given parameters

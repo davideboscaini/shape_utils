@@ -1,11 +1,11 @@
-function [B lims] = rescale_(A, lims, out_lims)
+function [B lims] = rescale_colormap(A, lims, out_lims)
 %RESCALE  Linearly rescale values in an array
 %
 % Examples:
-%   B = rescale(A)
-%   B = rescale(A, lims)
-%   B = rescale(A, lims, out_lims)
-%   [B lims] = rescale(A)
+%   B = rescale_colormap(A)
+%   B = rescale_colormap(A, lims)
+%   B = rescale_colormap(A, lims, out_lims)
+%   [B lims] = rescale_colormap(A)
 %
 % Linearly rescales values in an array, saturating values outside limits.
 %

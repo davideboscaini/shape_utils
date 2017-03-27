@@ -16,11 +16,13 @@ function scale_factor = compute_scale_factor_to_200_diam(shape,params)
 %    scale_factor, scalar value
 %
 
-params.q = 10;
-params.flag_dist = 'geod';
-params.flag_random = 1;
-idxs = compute_FPS(shape,params);
+if nargin < 2
+    params.q = 10;
+    params.flag_dist = 'geod';
+    params.flag_random = 1;
+end
 
+idxs = compute_FPS(shape,params);
 params.thresh = 1e+12;
 params.n_dists = params.q;
 geods = compute_geods(shape,idxs,params);

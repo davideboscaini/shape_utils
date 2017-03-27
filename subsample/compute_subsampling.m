@@ -37,6 +37,7 @@ if nargin < 2
 end    
 
 if strcmp(params.method,'qslim')
+    
     if ~isfield(params,'n')
         params.n = 1000;
     end
@@ -50,12 +51,22 @@ if strcmp(params.method,'qslim')
         params.penalty   = 1;
     end
     [TRIV,X,Y,Z] = remesh(shape_in,params);
+    shape_out      = struct;
+    shape_out.TRIV = TRIV;
+    shape_out.X    = X;
+    shape_out.Y    = Y;
+    shape_out.Z    = Z;
+
 elseif strcmp(params.method,'matlab')
-    [TRIV,X,Y,Z] = remesh(shape_in,params);
+    
+    tmp.vertices     = [shape_in.X,shape_in.Y,shape_in.Z];
+    tmp.faces        = shape_in.TRIV;
+    [faces,vertices] = reducepatch(tmp,params.n); % floor(params.perc*length(shape_in.X)/100)
+    shape_out.TRIV   = faces;
+    shape_out.X      = vertices(:,1);
+    shape_out.Y      = vertices(:,2);
+    shape_out.Z      = vertices(:,3); 
+    
 end
 
-shape_out      = struct;
-shape_out.TRIV = TRIV;
-shape_out.X    = X;
-shape_out.Y    = Y;
-shape_out.Z    = Z;
+

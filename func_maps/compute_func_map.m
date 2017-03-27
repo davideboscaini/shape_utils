@@ -25,6 +25,12 @@ if strcmp(params.solver,'backslash')
     C = L \ R;
 elseif strcmp(params.solver,'pinv')
     C = pinv(L) * R;
+elseif strcmp(params.solver,'cvx_L21')
+    k = params.k;
+    cvx_begin;
+        variable C(k,k);
+        minimize(norms(L * C - R,2,1));
+    cvx_end;      
 end
 
 C = C';
