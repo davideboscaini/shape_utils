@@ -1,0 +1,14 @@
+# Written by Emanuele Rodola
+# USI Lugano, Apr 2016
+
+LIBNAME=geodesic.so.1
+BOOST_DIR=/home/dboscaini/libraries/boost_1_60_0/
+CXXFLAGS=-Wall -O2
+
+all:
+	g++ -c -fPIC ./lib/geodesic_matlab_api.cpp -o ./lib/geodesic_matlab_api.o $(CXXFLAGS) -I$(BOOST_DIR) 
+	g++ -shared -o ./lib/$(LIBNAME).0 ./lib/geodesic_matlab_api.o -Wl,-soname,./lib/$(LIBNAME)
+	cp ./lib/$(LIBNAME).0 ./$(LIBNAME).0
+	
+clean:
+	rm -f ./lib/geodesic_matlab_api.o ./lib/$(LIBNAME) ./lib/$(LIBNAME).a
